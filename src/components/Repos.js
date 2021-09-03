@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { GithubContext } from '../context/context';
 import { ExampleChart, Pie3D, Column3D, Bar3D, Doughnut2D } from './Charts';
+
 const Repos = () => {
   const { repos } = React.useContext(GithubContext);
 
@@ -26,6 +27,7 @@ const Repos = () => {
     })
     .slice(0, 5);
 
+  // most stars per language
   const mostPopular = Object.values(languages)
     .sort((a, b) => {
       return b.stars - a.stars;
@@ -35,28 +37,28 @@ const Repos = () => {
     })
     .slice(0, 5);
 
-  const chartData = [
-    {
-      label: 'HTML',
-      value: '13',
+  // stars, forks
+  let { stars, forks } = repos.reduce(
+    (total, item) => {
+      const { stargazers_count, name, forks } = item;
+      total.stars[stargazers_count] = { label: name, value: stargazers_count };
+      total.forks[forks] = { label: name, value: forks };
+
+      return total;
     },
-    {
-      label: 'CSS',
-      value: '23',
-    },
-    {
-      label: 'Javascript',
-      value: '80',
-    },
-  ];
+    { stars: {}, forks: {} }
+  );
+
+  stars = Object.values(stars).slice(-5).reverse();
+  forks = Object.values(forks).slice(-5).reverse();
 
   return (
     <section className='section'>
       <Wrapper className='section-center'>
         <Pie3D data={mostUsed} />
-        <Column3D data={chartData} />
+        <Column3D data={stars} />
         <Doughnut2D data={mostPopular} />
-        <Bar3D data={chartData} />
+        <Bar3D data={forks} />
       </Wrapper>
     </section>
   );
