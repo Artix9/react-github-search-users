@@ -18,7 +18,6 @@ const ChartComponent = ({ data }) => {
         theme: 'fusion',
         decimals: 0,
         pieRadius: '45%',
-        // paletteColors: '#f0db4f',
       },
       data,
     },
